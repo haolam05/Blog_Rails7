@@ -1,13 +1,46 @@
 <div class="comment-<%= comment.id %> container" style="border: 1px solid black; padding: 1em; margin: 1em;">
     <%= comment.user.email %><br>
-    <span>Posted <%= time_ago_in_words(comment.created_at) %> ago</span>
+
+    <% if comment.updated_at - comment.created_at > 1 %>
+        <span>Edited <%= time_ago_in_words(comment.updated_at) %> ago</span>
+    <% else %>
+        <span>Posted <%= time_ago_in_words(comment.created_at) %> ago</span>
+    <% end %>
 
     <% if current_user == comment.user %>
-        <div class="button-group float-end">
+        <div class="btn-group float-end">
+            <!-- use stimulus => not redirect anywhere, update remotely -->
+            <%= link_to "Edit", nil, remote: true, class: "btn btn-warning", 
+
+                #stimulus setup
+                data: { 
+                    controller: "comments",
+                    action: "comments#editForm",
+
+                    # passing info to stimulus
+                    comments_form_param: "edit-form-#{comment.id}",     # event.params["form"]
+                    comments_body_param: "comment-body-#{comment.id}"   # event.params["body"]
+                    # stimulusControllerName_parameterName_actualParams = event.params[parameterName]
+                } 
+                #stimulus setup
+
+            %>    
             <%= button_to "Delete", [post, comment], method: :delete, class: "btn btn-danger" %>
         </div>
+    
+        <!-- is hidden until edit button is clicked -->
+        <div id="edit-form-<%= comment.id %>" class="d-none">
+            <%= render 'comments/form', post: @post, comment: comment, submit_label: "Update" %>
+        </div>
+        <!-- is hidden until edit button is clicked -->
+
     <% end %>
     
+    <!-- comment_body for us to grab in stimulus later -->
+    <div id="comment-body-<%= comment.id %>">
+        <%= comment.body %>
+    </div>
+    <!-- comment_body for us to grab in stimulus later -->
+
     <hr>
-    <%= comment.body %>
 </div>
