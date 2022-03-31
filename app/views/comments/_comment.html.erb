@@ -10,7 +10,7 @@
     <% if current_user == comment.user %>
         <div class="btn-group float-end">
             <!-- use stimulus => not redirect anywhere, update remotely -->
-            <%= link_to "Edit", nil, remote: true, class: "btn btn-warning", 
+            <%= link_to "Edit", nil, remote: true, class: "btn btn-warning", id: "edit-button-#{comment.id}",
 
                 #stimulus setup
                 data: { 
@@ -19,7 +19,8 @@
 
                     # passing info to stimulus
                     comments_form_param: "edit-form-#{comment.id}",     # event.params["form"]
-                    comments_body_param: "comment-body-#{comment.id}"   # event.params["body"]
+                    comments_body_param: "comment-body-#{comment.id}",  # event.params["body"]
+                    comments_edit_param: "edit-button-#{comment.id}"    # event.params["edit"]
                     # stimulusControllerName_parameterName_actualParams = event.params[parameterName]
                 } 
                 #stimulus setup
