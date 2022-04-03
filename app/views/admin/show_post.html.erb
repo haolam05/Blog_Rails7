@@ -26,8 +26,8 @@
     </div>
 
     <div class="row mt-1">
-        <p><strong><%= pluralize(@post.comments.size, "Comment") %>: </strong>
-            <%= @post.comments.each do |comment| %>
+        <p><strong><%= pluralize(@comments.size, "Comment") %>: </strong>
+            <% @comments.each do |comment| %>
                 <%= comment.user.name %>
                 <%= comment.body %>
             <% end %>
